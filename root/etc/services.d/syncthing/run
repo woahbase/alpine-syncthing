@@ -1,5 +1,0 @@
-#!/usr/bin/with-contenv sh
-
-cd /home/syncthing || exit 1;
-
-s6-setuidgid syncthing syncthing -home=/home/syncthing/config -gui-address="0.0.0.0:8384" -no-browser -no-restart

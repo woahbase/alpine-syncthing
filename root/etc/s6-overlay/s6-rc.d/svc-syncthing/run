@@ -1,0 +1,17 @@
+#!/usr/bin/with-contenv bash
+set -e
+
+SYNCTHING_HOME="${SYNCTHING_HOME:-/var/syncthing}";
+STHOMEDIR="${STHOMEDIR:-$SYNCTHING_HOME/config}";
+STGUIADDRESS="${STGUIADDRESS:-0.0.0.0:8384}";
+
+SYNCTHING_ARGS="${SYNCTHING_ARGS:- --no-browser --no-restart}";
+
+cd ${SYNCTHING_HOME} || exit 1;
+
+s6-setuidgid ${S6_USER:-alpine} \
+exec \
+    syncthing \
+        --home="${STHOMEDIR}" \
+        --gui-address="${STGUIADDRESS}" \
+        ${SYNCTHING_ARGS}

@@ -1,0 +1,29 @@
+#!/usr/bin/with-contenv bash
+set -e
+
+SYNCTHING_HOME="${SYNCTHING_HOME:-/var/syncthing}";
+STHOMEDIR="${STHOMEDIR:-$SYNCTHING_HOME/config}";
+
+# default folder creation is turned off, so for custom data dirs
+# ensure top-level directory is owned by syncthing so subfolders
+# can be created/synced from gui/application
+SYNCTHING_DATA="${SYNCTHING_DATA:-$SYNCTHING_HOME/data}";
+
+mkdir -p \
+    "${SYNCTHING_HOME}" \
+    "${STHOMEDIR}" \
+    "${SYNCTHING_DATA}" \
+    ;
+
+# fix permissions
+chown -R \
+    ${S6_USER:-alpine}:${S6_USER:-alpine} \
+    "${STHOMEDIR}" \
+    ;
+
+# not running chown -R over datadir
+chown \
+    ${S6_USER:-alpine}:${S6_USER:-alpine} \
+    "${SYNCTHING_HOME}" \
+    "${SYNCTHING_DATA}" \
+    ;
