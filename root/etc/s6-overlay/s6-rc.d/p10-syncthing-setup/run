@@ -1,6 +1,8 @@
 #!/usr/bin/with-contenv bash
 set -e
 
+vecho () { if [ "${S6_VERBOSITY:-1}" -gt 0 ]; then echo "[$0] $@"; fi; }
+
 SYNCTHING_HOME="${SYNCTHING_HOME:-/var/syncthing}";
 STHOMEDIR="${STHOMEDIR:-$SYNCTHING_HOME/config}";
 
@@ -9,6 +11,7 @@ STHOMEDIR="${STHOMEDIR:-$SYNCTHING_HOME/config}";
 # can be created/synced from gui/application
 SYNCTHING_DATA="${SYNCTHING_DATA:-$SYNCTHING_HOME/data}";
 
+vecho "Ensure default configuration directories exist.";
 mkdir -p \
     "${SYNCTHING_HOME}" \
     "${STHOMEDIR}" \
@@ -16,6 +19,7 @@ mkdir -p \
     ;
 
 # fix permissions
+vecho "Fixing permissions.";
 chown -R \
     ${S6_USER:-alpine}:${S6_USER:-alpine} \
     "${STHOMEDIR}" \
