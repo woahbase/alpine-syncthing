@@ -19,15 +19,19 @@ mkdir -p \
     ;
 
 # fix permissions
-vecho "Fixing permissions.";
-chown -R \
-    ${S6_USER:-alpine}:${S6_USER:-alpine} \
-    "${STHOMEDIR}" \
-    ;
+if [ -z "${SYNCTHING_SKIP_PERMFIX}" ] \
+&& [ "X${EUID}" == "X0" ]; # requires root
+then
+    vecho "Fixing permissions.";
+    chown -R \
+        ${S6_USER:-alpine}:${PGID:-1000} \
+        "${STHOMEDIR}" \
+        ;
 
-# not running chown -R over datadir
-chown \
-    ${S6_USER:-alpine}:${S6_USER:-alpine} \
-    "${SYNCTHING_HOME}" \
-    "${SYNCTHING_DATA}" \
-    ;
+    # not running chown -R over datadir
+    chown \
+        ${S6_USER:-alpine}:${PGID:-1000} \
+        "${SYNCTHING_HOME}" \
+        "${SYNCTHING_DATA}" \
+        ;
+fi;

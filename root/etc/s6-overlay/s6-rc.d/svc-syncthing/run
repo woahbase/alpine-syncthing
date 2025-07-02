@@ -1,6 +1,8 @@
 #!/usr/bin/with-contenv bash
 set -e
 
+usercmd () { if [ "X${EUID}" != "X0" ]; then ${1} "${@:2}"; else s6-setuidgid ${PUID:-1000}:${PGID:-1000} ${1} "${@:2}"; fi; }
+
 SYNCTHING_HOME="${SYNCTHING_HOME:-/var/syncthing}";
 STHOMEDIR="${STHOMEDIR:-$SYNCTHING_HOME/config}";
 STGUIADDRESS="${STGUIADDRESS:-0.0.0.0:8384}";
@@ -9,7 +11,7 @@ SYNCTHING_ARGS="${SYNCTHING_ARGS:- --no-browser --no-restart}";
 
 cd ${SYNCTHING_HOME} || exit 1;
 
-s6-setuidgid ${S6_USER:-alpine} \
+usercmd \
 exec \
     syncthing \
         --home="${STHOMEDIR}" \
