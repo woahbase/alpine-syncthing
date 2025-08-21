@@ -26,7 +26,7 @@ VERSION   ?= $(call get_gh_version,syncthing/syncthing)
 
 TESTCMD   := \
 	uname -a; \
-	syncthing --version; \
+	syncthing version; \
 	#
 
 SKIP_loong64  := 1
